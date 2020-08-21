@@ -1,0 +1,19 @@
+==>Configure SLA and track on cisoc device
+
+ip sla 10
+ icmp-echo 10.10.10.2 source-ip 10.10.10.1
+ frequency 10
+ip sla schedule 10 life forever start-time now
+
+
+==> Upload the TCL scripts in flash:/tcl or any folder you want
+
+==> Register the TCL script with EEM
+
+event manager directory user policy <script_name>
+event manager update user policy shut_bgp.tcl 
+
+==> If you make a change in TCL script, you can't directly have the EEM update the script using below command:
+
+event manager update user policy name <script_name> repository tftp://<server_ip>
+event manager update user policy name shut_bgp.tcl repository tftp://172.16.1.103

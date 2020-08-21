@@ -1,10 +1,12 @@
 ==>Configure SLA and track on cisoc device
 
+!
 ip sla 10
  icmp-echo 10.10.10.2 source-ip 10.10.10.1
  frequency 10
 ip sla schedule 10 life forever start-time now
-
+!
+track 10 ip sla 10 reachability
 
 ==> Upload the TCL scripts in flash:/tcl or any folder you want
 

@@ -1,0 +1,59 @@
+Note : I only tested the EEM from CSR1
+
+Router Config :
+---------------------
+CSR1#
+interface GigabitEthernet1
+ description Connected to CSR2
+ ip address 10.10.10.1 255.255.255.0
+!
+router bgp 10
+ bgp log-neighbor-changes
+ network 1.1.1.1 mask 255.255.255.255
+ neighbor 10.10.10.2 remote-as 10
+!
+track 10 ip sla 10 reachability
+!
+ip sla 10
+ icmp-echo 10.10.10.2 source-ip 10.10.10.1
+ frequency 10
+ip sla schedule 10 life forever start-time now
+
+CSR2#
+interface GigabitEthernet1
+ description Connected to CSR1
+ ip address 10.10.10.2 255.255.255.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router bgp 10
+ bgp log-neighbor-changes
+ network 2.2.2.2 mask 255.255.255.255
+ neighbor 10.10.10.1 remote-as 10
+!
+
+Test Run:
+---------------------
+CSR1(config)#int gig1
+CSR1(config-if)#
+CSR1(config-if)#shut
+CSR1(config-if)#
+*Aug 21 04:36:27.445: %LINK-5-CHANGED: Interface GigabitEthernet1, changed state to administratively down
+*Aug 21 04:36:28.446: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1, changed state to down
+*Aug 21 04:36:37.154: %TRACK-6-STATE: 10 ip sla 10 reachability Up -> Down
+*Aug 21 04:36:37.868: %BGP-3-NOTIFICATION: sent to neighbor 10.10.10.2 6/2 (Administrative Shutdown) 0 bytes
+*Aug 21 04:36:37.869: %BGP-5-NBR_RESET: Neighbor 10.10.10.2 reset (Admin. shutdown)
+*Aug 21 04:36:37.870: %BGP-5-ADJCHANGE: neighbor 10.10.10.2 Down Admin. shutdown
+*Aug 21 04:36:37.870: %BGP_SESSION-5-ADJCHANGE: neighbor 10.10.10.2 IPv4 Unicast topology base removed from session  Admin. shutdown
+*Aug 21 04:36:38.050: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:shut_bgp.tcl)
+CSR1(config-if)#
+CSR1(config-if)#no shut
+CSR1(config-if)#
+CSR1(config-if)#
+*Aug 21 04:36:55.302: %LINK-3-UPDOWN: Interface GigabitEthernet1, changed state to up
+*Aug 21 04:36:56.302: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet1, changed state to up
+*Aug 21 04:37:02.156: %TRACK-6-STATE: 10 ip sla 10 reachability Down -> Up
+*Aug 21 04:37:34.027: %SYS-5-CONFIG_I: Configured from console by  on vty0 (EEM:unshut_bgp.tcl)
+*Aug 21 04:37:34.472: %BGP-5-ADJCHANGE: neighbor 10.10.10.2 Up
+

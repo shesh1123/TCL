@@ -6,7 +6,11 @@ These are just my take on TCL and I am sure they can be modefied further. I will
 
 
 Useful links:
+
 https://www.tcl.tk/
+
 https://www.tcl.tk/man/tcl8.5/tutorial/tcltutorial.html
+
 https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/eem/configuration/12-4t/eem-12-4t-book/eem-policy-tcl.html
+
 https://community.cisco.com/t5/networking-documents/cisco-eem-best-practices/ta-p/3127596
